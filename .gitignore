@@ -1,0 +1,14 @@
+# Secrets — niemals auf GitHub pushen!
+.streamlit/secrets.toml
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+venv/
+.venv/
+
+# Betriebssystem
+.DS_Store
+Thumbs.db
