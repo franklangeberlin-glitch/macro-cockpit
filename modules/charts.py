@@ -36,12 +36,12 @@ def _base_layout(fig, height=340, title=""):
 
 def _phase_bands(fig, row=1, col=1):
     for lo, hi, rgba, lbl in [
-        (0, 20,  "rgba(226,75,74,0.10)",   "Depression"),
-        (21, 40, "rgba(239,159,39,0.10)",  "Rezession"),
-        (41, 55, "rgba(55,138,221,0.08)",  "Erholung"),
-        (56, 70, "rgba(99,153,34,0.08)",   "Aufschwung"),
-        (71, 85, "rgba(29,158,117,0.08)",  "Späte Expansion"),
-        (86,100, "rgba(29,158,117,0.14)",  "Peak"),
+        (0,  20,  "rgba(226,75,74,0.10)",  "Depression"),
+        (21, 40,  "rgba(239,159,39,0.10)", "Rezession"),
+        (41, 55,  "rgba(55,138,221,0.08)", "Erholung"),
+        (56, 70,  "rgba(99,153,34,0.08)",  "Aufschwung"),
+        (71, 85,  "rgba(29,158,117,0.08)", "Späte Expansion"),
+        (86, 100, "rgba(29,158,117,0.14)", "Peak"),
     ]:
         fig.add_hrect(
             y0=lo, y1=hi, fillcolor=rgba, line_width=0,
@@ -75,8 +75,8 @@ class ChartBuilder:
         fig = make_subplots(
             rows=1, cols=2,
             subplot_titles=(
-                f"📈  Score-Verlauf — {region}",
-                f"📉  Zinskurve & Inflation — {region}",
+                f"Score-Verlauf — {region}",
+                f"Zinskurve & Inflation — {region}",
             ),
             horizontal_spacing=0.09,
         )
@@ -102,7 +102,7 @@ class ChartBuilder:
             ), row=1, col=1)
 
         _phase_bands(fig, 1, 1)
-        fig.update_yaxes(range=[0, 100], title_text="Score (0–100)", row=1, col=1)
+        fig.update_yaxes(range=[0, 100], title_text="Score (0-100)", row=1, col=1)
 
         if hist_y:
             n = min(len(months), len(hist_y))
@@ -113,9 +113,6 @@ class ChartBuilder:
             ), row=1, col=2)
             fig.add_hline(y=0, line_dash="dot",
                           line_color="rgba(255,90,90,0.5)", line_width=1,
-                          annotation_text="Inversion",
-                          annotation_font_size=8,
-                          annotation_font_color="rgba(255,90,90,0.55)",
                           row=1, col=2)
 
         if hist_c:
@@ -125,24 +122,16 @@ class ChartBuilder:
                 x=months[:n], y=hist_c[:n], name=c_lbl,
                 line=dict(color=cpi_col, width=1.5, dash="dot"),
                 hovertemplate="%{y:.1f}%<extra></extra>",
-                yaxis="y4",
             ), row=1, col=2)
 
-                fig.update_layout(
-            yaxis4=dict(overlaying="y2", side="right",
-                        title="CPI %", showgrid=False,
-                        tickfont=dict(size=10))
-        )
-        )
-        )
-        fig.update_yaxes(title_text="Spread bp", row=1, col=2)
+        fig.update_yaxes(title_text="Spread/CPI", row=1, col=2)
         _base_layout(fig, height=330)
         return fig
 
     def comparison(self, scores: dict, regions: list) -> go.Figure:
         fig = make_subplots(
             rows=1, cols=2,
-            subplot_titles=("Radar — Block-Scores", "Gesamt-Score Vergleich"),
+            subplot_titles=("Radar - Block-Scores", "Gesamt-Score Vergleich"),
             specs=[[{"type": "polar"}, {"type": "xy"}]],
             horizontal_spacing=0.12,
         )
@@ -167,7 +156,7 @@ class ChartBuilder:
         fig.add_trace(go.Bar(
             x=regions, y=totals, marker_color=colors,
             name="Gesamt",
-            text=[f"{s}<br>{scorer.phase(s)}" for s in totals],
+            text=[f"{s} {scorer.phase(s)}" for s in totals],
             textposition="outside", textfont=dict(size=11),
             showlegend=False,
             hovertemplate="%{x}: %{y}<extra></extra>",
@@ -200,8 +189,8 @@ class ChartBuilder:
                 hovertemplate=f"{region}: %{{y:.0f}}<extra></extra>",
             ))
         _phase_bands(fig)
-        fig.update_yaxes(range=[0, 100], title_text="Score (0–100)")
-        _base_layout(fig, height=320, title="Score-Verlauf — alle Regionen")
+        fig.update_yaxes(range=[0, 100], title_text="Score (0-100)")
+        _base_layout(fig, height=320, title="Score-Verlauf alle Regionen")
         return fig
 
     def weight_donut(self) -> go.Figure:
