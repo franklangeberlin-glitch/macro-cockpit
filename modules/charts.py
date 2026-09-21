@@ -131,8 +131,8 @@ class ChartBuilder:
         fig.update_layout(
             yaxis4=dict(overlaying="y2", side="right",
                         title="CPI %", showgrid=False,
-                        tickfont=dict(size=10),
-                        titlefont=dict(size=10))
+                        tickfont=dict(size=10))
+        )
         )
         fig.update_yaxes(title_text="Spread bp", row=1, col=2)
         _base_layout(fig, height=330)
